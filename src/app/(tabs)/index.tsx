@@ -1,16 +1,16 @@
 import { StyleSheet, Text, View, Image, FlatList } from "react-native";
-import Colors from "@/src/constants/Colors";
-import products from "@/assets/data/products";
-import ProductList from "@/src/components/ProductList";
+import products from "@assets/data/products";
+import ProductList from "@components/ProductList";
 
 export default function MenuScreen() {
   return (
-    <View>
-      <FlatList
-        data={products}
-        renderItem={(item) => <ProductList product={item} />}
-        keyExtractor={(item) => item.id.toString()}
-      />
-    </View>
+    <FlatList
+      data={products}
+      renderItem={({ item }) => <ProductList product={item} />}
+      keyExtractor={(item) => item.id.toString()}
+      numColumns={2}
+      contentContainerStyle={{ gap: 10, padding: 10 }}
+      columnWrapperStyle={{ gap: 10 }}
+    />
   );
 }
