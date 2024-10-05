@@ -2,18 +2,29 @@ import Button from "@/components/Button";
 import { defaultPizzaImage } from "@/components/ProductList";
 import Colors from "@/constants/Colors";
 import { useState } from "react";
-import { View, Text, StyleSheet, TextInput, Image } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Image,
+  Pressable,
+  Alert,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { Stack } from "expo-router";
+import { Link, Stack, useLocalSearchParams } from "expo-router";
+import { FontAwesome } from "@expo/vector-icons";
 
 export default function CreateProductScreen() {
   const [newItem, setNewItem] = useState({
     name: "",
     price: "",
   });
-
   const [errors, setErrors] = useState("");
   const [image, setImage] = useState<string | null>(null);
+
+  const { id } = useLocalSearchParams();
+  const isUpdating = !!id;
 
   function resetField() {
     setNewItem({ name: "", price: "" });
@@ -24,6 +35,43 @@ export default function CreateProductScreen() {
 
     console.warn("Created:", newItem);
     resetField();
+  }
+
+  function onUpdate() {
+    if (!validateInput()) return;
+
+    console.warn("updated:", newItem);
+    resetField();
+  }
+
+  function onSubmit() {
+    if (isUpdating) {
+      onUpdate();
+    } else {
+      onCreate();
+    }
+  }
+
+  function onDelete() {
+    console.warn("Deleted");
+  }
+
+  function confirmDelete() {
+    Alert.alert(
+      "Confirm",
+      "Are you sure you want to delete this product?",
+      [
+        {
+          text: "Cancel",
+        },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: onDelete,
+        },
+      ],
+      { cancelable: true }
+    );
   }
 
   function validateInput() {
@@ -59,7 +107,24 @@ export default function CreateProductScreen() {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: "Create Dish" }} />
+      <Stack.Screen
+        options={{
+          title: isUpdating ? "Update Product" : "Create Product",
+          headerRight: () =>
+            isUpdating ? (
+              <Pressable onPress={confirmDelete}>
+                {({ pressed }) => (
+                  <FontAwesome
+                    name="trash"
+                    size={25}
+                    color={"red"}
+                    style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
+                  />
+                )}
+              </Pressable>
+            ) : null,
+        }}
+      />
       <Image
         source={{ uri: image || defaultPizzaImage }}
         style={styles.image}
@@ -85,7 +150,7 @@ export default function CreateProductScreen() {
         onChangeText={(price) => setNewItem({ ...newItem, price })}
       />
       <Text style={{ color: "red" }}>{errors}</Text>
-      <Button text="Create" onPress={onCreate} />
+      <Button text={isUpdating ? "Update" : "Create"} onPress={onSubmit} />
     </View>
   );
 }
