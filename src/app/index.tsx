@@ -1,16 +1,20 @@
 import { View, Text } from "react-native";
 import React from "react";
 import Button from "../components/Button";
-import { Link } from "expo-router";
+import { Link, Stack } from "expo-router";
 
 const index = () => {
   return (
     <View style={{ flex: 1, justifyContent: "center", padding: 10 }}>
+      <Stack.Screen options={{ title: "Chop Chop" }} />
       <Link href={"/(user)"} asChild>
         <Button text="User" />
       </Link>
       <Link href={"/(admin)"} asChild>
         <Button text="Admin" />
+      </Link>
+      <Link href={"/sign-in"} asChild>
+        <Button text="Sign In" />
       </Link>
     </View>
   );
