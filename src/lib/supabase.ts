@@ -3,14 +3,27 @@ import * as SecureStore from "expo-secure-store";
 import { createClient } from "@supabase/supabase-js";
 
 const ExpoSecureStoreAdapter = {
-  getItem: (key: string) => {
-    return SecureStore.getItemAsync(key);
+  getItem: async (key: string) => {
+    try {
+      return await SecureStore.getItemAsync(key);
+    } catch (error) {
+      console.error("Error getting item from SecureStore:", error);
+      return null;
+    }
   },
-  setItem: (key: string, value: string) => {
-    SecureStore.setItemAsync(key, value);
+  setItem: async (key: string, value: string) => {
+    try {
+      await SecureStore.setItemAsync(key, value);
+    } catch (error) {
+      console.error("Error setting item in SecureStore:", error);
+    }
   },
-  removeItem: (key: string) => {
-    SecureStore.deleteItemAsync(key);
+  removeItem: async (key: string) => {
+    try {
+      await SecureStore.deleteItemAsync(key);
+    } catch (error) {
+      console.error("Error removing item from SecureStore:", error);
+    }
   },
 };
 
