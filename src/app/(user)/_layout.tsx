@@ -17,12 +17,11 @@ function TabBarIcon(props: {
 }
 
 export default function TabLayout() {
-  const { session, isAdmin, profile } = useAuth();
+  const { session } = useAuth();
 
   if (!session) {
     return <Redirect href={"/"} />;
   }
-  console.log(profile.group);
 
   const colorScheme = useColorScheme();
 

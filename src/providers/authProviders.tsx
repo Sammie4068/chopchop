@@ -56,7 +56,7 @@ export default function AuthProvider({ children }: PropsWithChildren) {
     return () => {
       authListener?.subscription?.unsubscribe();
     };
-  }, []);
+  }, [session]);
 
   return (
     <AuthContext.Provider
