@@ -7,10 +7,9 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/providers/authProviders";
 
 const SignUpScreen = () => {
-  const { session } = useAuth();
-  console.log(session);
+  const { data: sessionData } = useAuth();
 
-  if (session) {
+  if (sessionData?.session) {
     return <Redirect href={"/"} />;
   }
 

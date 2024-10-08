@@ -17,10 +17,10 @@ function TabBarIcon(props: {
 }
 
 export default function TabLayout() {
-  const { session } = useAuth();
+  const { data: sessionData } = useAuth();
 
-  if (!session) {
-    return <Redirect href={"/"} />;
+  if (!sessionData?.session) {
+    return <Redirect href={"/sign-in"} />;
   }
 
   const colorScheme = useColorScheme();

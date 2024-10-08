@@ -7,16 +7,16 @@ import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/providers/authProviders";
 
 const SignInScreen = () => {
-  const { session } = useAuth();
-  if (session) {
-    return <Redirect href={"/"} />;
-  }
-
+  const { data: sessionData } = useAuth();
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
+
+  if (sessionData?.session) {
+    return <Redirect href={"/"} />;
+  }
 
   async function signin() {
     setLoading(true);

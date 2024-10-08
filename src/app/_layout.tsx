@@ -12,7 +12,10 @@ import { useEffect } from "react";
 
 import { useColorScheme } from "@components/useColorScheme";
 import CartProvider from "@/providers/cartProvider";
-import AuthProvider from "@/providers/authProviders";
+// import AuthProvider from "@/providers/authProviders";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+const queryClient = new QueryClient();
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -56,7 +59,7 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
-      <AuthProvider>
+      <QueryClientProvider client={queryClient}>
         <CartProvider>
           <Stack>
             <Stack.Screen name="(admin)" options={{ headerShown: false }} />
@@ -65,7 +68,7 @@ function RootLayoutNav() {
             <Stack.Screen name="cart" options={{ presentation: "modal" }} />
           </Stack>
         </CartProvider>
-      </AuthProvider>
+      </QueryClientProvider>
     </ThemeProvider>
   );
 }

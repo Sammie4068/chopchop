@@ -1,70 +1,43 @@
 import { supabase } from "@/lib/supabase";
-import { Session } from "@supabase/supabase-js";
-import {
-  createContext,
-  PropsWithChildren,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
-type AuthData = {
-  session: Session | null;
-  loading: boolean;
-  profile: any;
-  isAdmin: boolean;
+export const useAuth = () => {
+  const queryClient = useQueryClient();
+
+  // This function will always return something, ensuring hooks are not conditionally rendered
+  const fetchSession = async () => {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
+    if (session) {
+      const { data } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", session.user.id)
+        .single();
+
+      return {
+        session,
+        user: data,
+        isAdmin: data.group === "ADMIN",
+      };
+    }
+
+    return { session: null, user: null, isAdmin: false }; // Ensure it always returns something
+  };
+
+  // useQuery is always called here, no conditional returns
+  const query = useQuery({
+    queryKey: ["authSession"],
+    queryFn: fetchSession,
+    staleTime: 5 * 60 * 1000, // Optional: prevent frequent refetching within 5 minutes
+  });
+
+  // Attach the onAuthStateChange listener within the query, re-fetching the session when the state changes
+  supabase.auth.onAuthStateChange(() => {
+    queryClient.invalidateQueries({ queryKey: ["authSession"] });
+  });
+
+  return query;
 };
-
-const AuthContext = createContext<AuthData>({
-  session: null,
-  loading: true,
-  profile: null,
-  isAdmin: false,
-});
-
-export default function AuthProvider({ children }: PropsWithChildren) {
-  const [session, setSession] = useState<Session | null>(null);
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchSession = async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      setSession(session);
-
-      if (session) {
-        // fetch profile
-        const { data } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", session.user.id)
-          .single();
-        setProfile(data || null);
-      }
-      setLoading(false);
-    };
-
-    fetchSession();
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-      }
-    );
-    return () => {
-      authListener?.subscription?.unsubscribe();
-    };
-  }, [session]);
-
-  return (
-    <AuthContext.Provider
-      value={{ session, loading, profile, isAdmin: profile?.group === "ADMIN" }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
-}
-
-export const useAuth = () => useContext(AuthContext);
