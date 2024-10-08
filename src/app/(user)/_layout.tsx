@@ -18,13 +18,11 @@ function TabBarIcon(props: {
 
 export default function TabLayout() {
   const { data: sessionData } = useAuth();
+  const colorScheme = useColorScheme();
 
   if (!sessionData?.session) {
     return <Redirect href={"/sign-in"} />;
   }
-
-  const colorScheme = useColorScheme();
-
   return (
     <Tabs
       screenOptions={{

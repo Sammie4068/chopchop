@@ -1,10 +1,22 @@
 import { supabase } from "@/lib/supabase";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
+export const useGetProducts = () => {
+  const fetchProducts = async () => {
+    const { data, error } = await supabase.from("products").select("*");
+    if (error) throw new Error(error.message);
+    return data;
+  };
+
+  return useQuery({
+    queryKey: ["products"],
+    queryFn: fetchProducts,
+  });
+};
+
 export const useAuth = () => {
   const queryClient = useQueryClient();
 
-  // This function will always return something, ensuring hooks are not conditionally rendered
   const fetchSession = async () => {
     const {
       data: { session },
@@ -24,17 +36,15 @@ export const useAuth = () => {
       };
     }
 
-    return { session: null, user: null, isAdmin: false }; // Ensure it always returns something
+    return { session: null, user: null, isAdmin: false };
   };
 
-  // useQuery is always called here, no conditional returns
   const query = useQuery({
     queryKey: ["authSession"],
     queryFn: fetchSession,
-    staleTime: 5 * 60 * 1000, // Optional: prevent frequent refetching within 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 
-  // Attach the onAuthStateChange listener within the query, re-fetching the session when the state changes
   supabase.auth.onAuthStateChange(() => {
     queryClient.invalidateQueries({ queryKey: ["authSession"] });
   });

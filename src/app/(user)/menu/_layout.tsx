@@ -23,7 +23,7 @@ export default function MenuStack() {
               </Pressable>
             </Link>
 
-            {/* <Pressable onPress={async () => await supabase.auth.signOut()}>
+            <Pressable onPress={async () => await supabase.auth.signOut()}>
               {({ pressed }) => (
                 <FontAwesome
                   name="sign-out"
@@ -32,7 +32,7 @@ export default function MenuStack() {
                   style={{ marginRight: 15, opacity: pressed ? 0.5 : 1 }}
                 />
               )}
-            </Pressable> */}
+            </Pressable>
           </>
         ),
       }}

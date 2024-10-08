@@ -8,16 +8,15 @@ import { useAuth } from "@/providers/authProviders";
 
 const SignUpScreen = () => {
   const { data: sessionData } = useAuth();
-
-  if (sessionData?.session) {
-    return <Redirect href={"/"} />;
-  }
-
   const [user, setUser] = useState({
     email: "",
     password: "",
   });
   const [loading, setLoading] = useState(false);
+
+  if (sessionData?.session) {
+    return <Redirect href={"/"} />;
+  }
 
   async function signup() {
     setLoading(true);
