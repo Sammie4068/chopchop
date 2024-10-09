@@ -1,5 +1,5 @@
 import { supabase } from "@/lib/supabase";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useGetProducts = () => {
   const fetchProducts = async () => {
@@ -11,6 +11,92 @@ export const useGetProducts = () => {
   return useQuery({
     queryKey: ["products"],
     queryFn: fetchProducts,
+  });
+};
+
+export const useGetProductById = (id: number) => {
+  const fetchProductById = async () => {
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .eq("id", id)
+      .single();
+    if (error) throw new Error(error.message);
+    return data;
+  };
+
+  return useQuery({
+    queryKey: ["products", id],
+    queryFn: fetchProductById,
+  });
+};
+
+export const useAddProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    async mutationFn(data: any) {
+      const { name, image, price } = data;
+      const { data: newProduct, error } = await supabase
+        .from("products")
+        .insert({
+          name,
+          image,
+          price,
+        })
+        .single();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return newProduct;
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
+  });
+};
+export const useUpdateProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    async mutationFn(data: any) {
+      const { id, name, image, price } = data;
+      const { data: updatedProduct, error } = await supabase
+        .from("products")
+        .update({
+          name,
+          image,
+          price,
+        })
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return updatedProduct;
+    },
+    async onSuccess(_, { id }) {
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
+      await queryClient.invalidateQueries({ queryKey: ["products", id] });
+    },
+  });
+};
+
+export const useDeleteProduct = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    async mutationFn(id: number) {
+      const { error } = await supabase.from("products").delete().eq("id", id);
+      if (error) {
+        throw new Error(error.message);
+      }
+    },
+    async onSuccess() {
+      await queryClient.invalidateQueries({ queryKey: ["products"] });
+    },
   });
 };
 

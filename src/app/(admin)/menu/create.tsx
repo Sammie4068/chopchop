@@ -1,7 +1,7 @@
 import Button from "@/components/Button";
 import { defaultPizzaImage } from "@/components/ProductList";
 import Colors from "@/constants/Colors";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -12,18 +12,40 @@ import {
   Alert,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
-import { Link, Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
+import {
+  useAddProduct,
+  useDeleteProduct,
+  useGetProductById,
+  useUpdateProduct,
+} from "@/providers/authProviders";
 
 export default function CreateProductScreen() {
+  const { id: idStr } = useLocalSearchParams();
+  const id = parseFloat(typeof idStr === "string" ? idStr : idStr[0]);
+
   const [newItem, setNewItem] = useState({
     name: "",
     price: "",
   });
   const [errors, setErrors] = useState("");
   const [image, setImage] = useState<string | null>(null);
+  const { mutate: addProduct } = useAddProduct();
+  const { mutate: updateProduct } = useUpdateProduct();
+  const { mutate: deleteProduct } = useDeleteProduct();
+  const { data: productData, error, isLoading } = useGetProductById(id);
 
-  const { id } = useLocalSearchParams();
+  useEffect(() => {
+    setNewItem({
+      name: productData?.name,
+      price: productData?.price.toString(),
+    });
+    setImage(productData?.image);
+  }, [productData]);
+
+  const router = useRouter();
+
   const isUpdating = !!id;
 
   function resetField() {
@@ -32,15 +54,33 @@ export default function CreateProductScreen() {
 
   function onCreate() {
     if (!validateInput()) return;
-
-    console.warn("Created:", newItem);
-    resetField();
+    addProduct(
+      { name: newItem.name, price: parseFloat(newItem.price), image },
+      {
+        onSuccess: () => {
+          resetField();
+          router.back();
+        },
+      }
+    );
   }
 
   function onUpdate() {
     if (!validateInput()) return;
 
-    console.warn("updated:", newItem);
+    updateProduct(
+      {
+        id,
+        name: newItem.name,
+        price: parseFloat(newItem.price),
+      },
+      {
+        onSuccess() {
+          resetField();
+          router.back();
+        },
+      }
+    );
     resetField();
   }
 
@@ -53,7 +93,12 @@ export default function CreateProductScreen() {
   }
 
   function onDelete() {
-    console.warn("Deleted");
+    deleteProduct(id, {
+      onSuccess: () => {
+        resetField();
+        router.replace("/(admin)");
+      },
+    });
   }
 
   function confirmDelete() {
