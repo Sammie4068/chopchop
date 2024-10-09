@@ -1,8 +1,13 @@
 import OrderListItem from "@/components/OrderList";
-import orders from "@assets/data/orders";
-import { Text, FlatList } from "react-native";
+import { useGetOrdersById } from "@/providers/ordersProviders";
+import { Text, FlatList, ActivityIndicator } from "react-native";
 
 export default function OrdersScreen() {
+  const { data: orders, isLoading, error } = useGetOrdersById();
+
+  if (isLoading) return <ActivityIndicator />;
+  if (error) return <Text>Failed to fetch</Text>;
+
   return (
     <FlatList
       data={orders}
