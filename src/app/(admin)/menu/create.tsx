@@ -21,20 +21,27 @@ import {
   useUpdateProduct,
 } from "@/providers/authProviders";
 
+interface userProps {
+  name: string | undefined;
+  price: string | undefined;
+}
+
 export default function CreateProductScreen() {
   const { id: idStr } = useLocalSearchParams();
   const id = parseFloat(typeof idStr === "string" ? idStr : idStr[0]);
 
-  const [newItem, setNewItem] = useState({
+  const [newItem, setNewItem] = useState<userProps>({
     name: "",
     price: "",
   });
   const [errors, setErrors] = useState("");
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<string | null | undefined>(null);
   const { mutate: addProduct } = useAddProduct();
   const { mutate: updateProduct } = useUpdateProduct();
   const { mutate: deleteProduct } = useDeleteProduct();
-  const { data: productData, error, isLoading } = useGetProductById(id);
+  const { data: productData } = useGetProductById(id);
+
+  const priceInNumber = newItem?.price ? parseFloat(newItem.price) : 0;
 
   useEffect(() => {
     setNewItem({
@@ -55,7 +62,7 @@ export default function CreateProductScreen() {
   function onCreate() {
     if (!validateInput()) return;
     addProduct(
-      { name: newItem.name, price: parseFloat(newItem.price), image },
+      { name: newItem.name, price: priceInNumber, image },
       {
         onSuccess: () => {
           resetField();
@@ -72,7 +79,7 @@ export default function CreateProductScreen() {
       {
         id,
         name: newItem.name,
-        price: parseFloat(newItem.price),
+        price: priceInNumber,
       },
       {
         onSuccess() {

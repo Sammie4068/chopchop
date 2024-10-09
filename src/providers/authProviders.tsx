@@ -118,7 +118,7 @@ export const useAuth = () => {
       return {
         session,
         user: data,
-        isAdmin: data.group === "ADMIN",
+        isAdmin: data?.group === "ADMIN",
       };
     }
 
