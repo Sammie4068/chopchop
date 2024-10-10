@@ -205,7 +205,7 @@ export default function CreateProductScreen() {
       />
       <RemoteImage
         path={productData?.image}
-        fallback={defaultPizzaImage}
+        fallback={image ? image : defaultPizzaImage}
         style={styles.image}
         resizeMode="contain"
       />

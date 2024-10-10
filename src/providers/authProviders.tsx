@@ -3,7 +3,10 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export const useGetProducts = () => {
   const fetchProducts = async () => {
-    const { data, error } = await supabase.from("products").select("*");
+    const { data, error } = await supabase
+      .from("products")
+      .select("*")
+      .order("created_at", { ascending: true });
     if (error) throw new Error(error.message);
     return data;
   };
