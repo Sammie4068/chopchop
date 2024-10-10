@@ -11,6 +11,7 @@ OrderListItem;
 import OrderItemListItem from "@/components/OrderItem";
 import OrderListItem from "@/components/OrderList";
 import { useGetOrderDetails } from "@/providers/ordersProviders";
+import { updateOrderSubscription } from "@/providers/subscribers";
 
 const OrderDetailScreen = () => {
   const { id: idStr } = useLocalSearchParams();
@@ -18,6 +19,7 @@ const OrderDetailScreen = () => {
   const id = parseFloat(typeof idStr === "string" ? idStr : idStr[0]);
 
   const { data: order, isLoading, error } = useGetOrderDetails(id);
+  updateOrderSubscription(id);
 
   if (!order) return <Text>{`Product ${idStr} not found`}</Text>;
   if (isLoading) return <ActivityIndicator />;
