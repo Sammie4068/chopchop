@@ -1,4 +1,5 @@
 import { defaultPizzaImage } from "@/components/ProductList";
+import RemoteImage from "@/components/remoteimage";
 import Colors from "@/constants/Colors";
 import { useGetProductById } from "@/providers/authProviders";
 import { useCart } from "@/providers/cartProvider";
@@ -61,8 +62,9 @@ export default function ProductDetailsScreen() {
         }}
       />
 
-      <Image
-        source={{ uri: product.image || defaultPizzaImage }}
+      <RemoteImage
+        path={product?.image}
+        fallback={defaultPizzaImage}
         style={styles.image}
         resizeMode="contain"
       />

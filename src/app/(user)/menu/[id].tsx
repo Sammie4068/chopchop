@@ -1,5 +1,6 @@
 import Button from "@/components/Button";
 import { defaultPizzaImage } from "@/components/ProductList";
+import RemoteImage from "@/components/remoteimage";
 import { useGetProductById } from "@/providers/authProviders";
 import { useCart } from "@/providers/cartProvider";
 import { PizzaSize } from "@/types";
@@ -40,8 +41,9 @@ export default function ProductDetailsScreen() {
     <View style={styles.container}>
       <Stack.Screen options={{ title: product.name }} />
 
-      <Image
-        source={{ uri: product.image || defaultPizzaImage }}
+      <RemoteImage
+        path={product?.image}
+        fallback={defaultPizzaImage}
         style={styles.image}
         resizeMode="contain"
       />
