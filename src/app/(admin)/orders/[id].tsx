@@ -28,10 +28,10 @@ const OrderDetailScreen = () => {
   const { data: order, isLoading, error } = useGetOrderDetails(id);
 
   if (isLoading) return <ActivityIndicator />;
-  if (error) return <Text>Failed to fetch {`${idStr}`}</Text>;
-  if (!order) return <Text>{`Product ${idStr} not found`}</Text>;
+  if (error) return <Text>Failed to fetch {idStr}</Text>;
+  if (!order) return;
 
-  const updateStatus = (status) => {
+  const updateStatus = (status: string) => {
     updateOrder({ id, updatedField: { status } });
   };
 

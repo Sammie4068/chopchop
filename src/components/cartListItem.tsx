@@ -5,7 +5,7 @@ import { CartItem } from "../types";
 import { FontAwesome } from "@expo/vector-icons";
 import { defaultPizzaImage } from "./ProductList";
 import { useCart } from "@/providers/cartProvider";
-import RemoteImage from "./remoteimage";
+import RemoteImage from "./RemoteImage";
 
 type CartListItemProps = {
   cartItem: CartItem;

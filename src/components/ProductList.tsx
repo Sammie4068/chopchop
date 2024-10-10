@@ -2,7 +2,7 @@ import { StyleSheet, Image, Text, View, Pressable } from "react-native";
 import Colors from "../constants/Colors";
 import { Tables } from "../types";
 import { Link, useSegments } from "expo-router";
-import RemoteImage from "./remoteimage";
+import RemoteImage from "./RemoteImage";
 
 type ProductListProps = {
   product: Tables<"products">;

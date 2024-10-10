@@ -1,6 +1,6 @@
 import Button from "@/components/Button";
 import { defaultPizzaImage } from "@/components/ProductList";
-import RemoteImage from "@/components/remoteimage";
+import RemoteImage from "@/components/RemoteImage";
 import { useGetProductById } from "@/providers/authProviders";
 import { useCart } from "@/providers/cartProvider";
 import { PizzaSize } from "@/types";
@@ -9,7 +9,6 @@ import { useState } from "react";
 import {
   View,
   Text,
-  Image,
   StyleSheet,
   Pressable,
   ActivityIndicator,

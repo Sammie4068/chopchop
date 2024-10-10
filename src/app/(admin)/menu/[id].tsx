@@ -1,5 +1,5 @@
 import { defaultPizzaImage } from "@/components/ProductList";
-import RemoteImage from "@/components/remoteimage";
+import RemoteImage from "@/components/RemoteImage";
 import Colors from "@/constants/Colors";
 import { useGetProductById } from "@/providers/authProviders";
 import { useCart } from "@/providers/cartProvider";
@@ -29,9 +29,9 @@ export default function ProductDetailsScreen() {
   const { addItem } = useCart();
   const router = useRouter();
 
-  if (!product) return <Text>{`Product ${idStr} not found`}</Text>;
+  if (!product) return;
   if (isLoading) return <ActivityIndicator />;
-  if (error) return <Text>Failed to fetch {`${idStr}`}</Text>;
+  if (error) return <Text>Failed to fetch {idStr}</Text>;
 
   function addToCart() {
     if (!product) return;

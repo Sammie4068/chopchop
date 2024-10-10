@@ -3,7 +3,7 @@ import React from "react";
 import Colors from "../constants/Colors";
 import { OrderItem, Tables } from "../types";
 import { defaultPizzaImage } from "./ProductList";
-import RemoteImage from "./remoteimage";
+import RemoteImage from "./RemoteImage";
 
 type OrderItemListItemProps = {
   item: { products: Tables<"products"> } & Tables<"order_items">;

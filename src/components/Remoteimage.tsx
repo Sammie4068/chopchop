@@ -7,7 +7,11 @@ type RemoteImageProps = {
   fallback: string;
 } & Omit<ComponentProps<typeof Image>, "source">;
 
-const RemoteImage = ({ path, fallback, ...imageProps }: RemoteImageProps) => {
+export default function RemoteImage({
+  path,
+  fallback,
+  ...imageProps
+}: RemoteImageProps) {
   const [image, setImage] = useState("");
 
   useEffect(() => {
@@ -36,6 +40,4 @@ const RemoteImage = ({ path, fallback, ...imageProps }: RemoteImageProps) => {
   }
 
   return <Image source={{ uri: image || fallback }} {...imageProps} />;
-};
-
-export default RemoteImage;
+}

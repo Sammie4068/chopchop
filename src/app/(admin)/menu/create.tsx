@@ -23,7 +23,7 @@ import { randomUUID } from "expo-crypto";
 import { decode } from "base64-arraybuffer";
 import { supabase } from "@/lib/supabase";
 import * as FileSystem from "expo-file-system";
-import RemoteImage from "@/components/remoteimage";
+import RemoteImage from "@/components/RemoteImage";
 
 interface userProps {
   name: string | undefined;
