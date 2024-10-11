@@ -17,6 +17,7 @@ import {
   useGetOrderDetails,
   useUpdateOrder,
 } from "@/providers/ordersProviders";
+import { notifyUser } from "@/lib/notifications";
 
 const OrderDetailScreen = () => {
   const { id: idStr } = useLocalSearchParams();
@@ -31,8 +32,9 @@ const OrderDetailScreen = () => {
   if (error) return <Text>Failed to fetch {idStr}</Text>;
   if (!order) return;
 
-  const updateStatus = (status: string) => {
+  const updateStatus = async (status: string) => {
     updateOrder({ id, updatedField: { status } });
+    if (order) await notifyUser({ ...order, status });
   };
 
   return (
