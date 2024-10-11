@@ -14,6 +14,7 @@ import { useColorScheme } from "@components/useColorScheme";
 import CartProvider from "@/providers/cartProvider";
 // import AuthProvider from "@/providers/authProviders";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import NotificationProvider from "@/providers/notificationProvider";
 
 const queryClient = new QueryClient();
 
@@ -60,14 +61,16 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <QueryClientProvider client={queryClient}>
-        <CartProvider>
-          <Stack>
-            <Stack.Screen name="(admin)" options={{ headerShown: false }} />
-            <Stack.Screen name="(user)" options={{ headerShown: false }} />
-            {/* <Stack.Screen name="(auth)" options={{ headerShown: false }} /> */}
-            <Stack.Screen name="cart" options={{ presentation: "modal" }} />
-          </Stack>
-        </CartProvider>
+        <NotificationProvider>
+          <CartProvider>
+            <Stack>
+              <Stack.Screen name="(admin)" options={{ headerShown: false }} />
+              <Stack.Screen name="(user)" options={{ headerShown: false }} />
+              {/* <Stack.Screen name="(auth)" options={{ headerShown: false }} /> */}
+              <Stack.Screen name="cart" options={{ presentation: "modal" }} />
+            </Stack>
+          </CartProvider>
+        </NotificationProvider>
       </QueryClientProvider>
     </ThemeProvider>
   );
